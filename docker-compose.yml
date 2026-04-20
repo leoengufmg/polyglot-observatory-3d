@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: frontend-3d/Dockerfile
     environment:
-      VITE_ANALYZER_API: http://python-analyzer:8000
+      VITE_ANALYZER_API: http://localhost:8000
     ports:
       - "5173:5173"
     depends_on:
