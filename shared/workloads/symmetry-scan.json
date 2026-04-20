@@ -1,0 +1,21 @@
+{
+  "id": "symmetry-scan",
+  "title": "Symmetry Scan",
+  "difficulty": "Core",
+  "description": "Normalize a string and determine whether its structure is symmetric.",
+  "prompt": "Build a function that returns true when a string is symmetric after removing case differences and non-alphanumeric characters.",
+  "sampleCode": {
+    "python": "def symmetry_scan(text: str) -> bool:\n    normalized = ''.join(ch.lower() for ch in text if ch.isalnum())\n    return normalized == normalized[::-1]\n",
+    "javascript": "function symmetryScan(text) {\n  const normalized = text.toLowerCase().replace(/[^a-z0-9]/g, '');\n  return normalized === normalized.split('').reverse().join('');\n}\n",
+    "typescript": "export function symmetryScan(text: string): boolean {\n  const normalized = text.toLowerCase().replace(/[^a-z0-9]/g, '');\n  return normalized === normalized.split('').reverse().join('');\n}\n",
+    "java": "public class SymmetryScan {\n    public static boolean symmetryScan(String text) {\n        String normalized = text.toLowerCase().replaceAll(\"[^a-z0-9]\", \"\");\n        String reversed = new StringBuilder(normalized).reverse().toString();\n        return normalized.equals(reversed);\n    }\n}\n",
+    "ruby": "def symmetry_scan(text)\n  normalized = text.downcase.gsub(/[^a-z0-9]/, '')\n  normalized == normalized.reverse\nend\n"
+  },
+  "expectedSignals": {
+    "python": ["def symmetry_scan", "lower", "isalnum", "return"],
+    "javascript": ["function symmetryScan", "toLowerCase", "replace", "return"],
+    "typescript": ["function symmetryScan", "toLowerCase", "replace", "boolean"],
+    "java": ["class SymmetryScan", "replaceAll", "StringBuilder", "return"],
+    "ruby": ["def symmetry_scan", "downcase", "gsub", "reverse"]
+  }
+}

@@ -1,4 +1,4 @@
-package com.aicodingtrainer;
+package com.polyglotobservatory;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -11,43 +11,43 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-public class JavaRunnerServer {
+public class JavaBenchmarkServer {
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        server.createContext("/health", exchange -> writeJson(exchange, 200, "{\"status\":\"ok\",\"service\":\"java-runner\"}"));
-        server.createContext("/score", exchange -> {
+        server.createContext("/health", exchange -> writeJson(exchange, 200, "{\"status\":\"ok\",\"service\":\"java-benchmark\"}"));
+        server.createContext("/benchmark", exchange -> {
             if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
                 writeJson(exchange, 405, "{\"error\":\"method not allowed\"}");
                 return;
             }
 
             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8).toLowerCase();
-            int bonusScore = 0;
+            int benchmarkBonus = 0;
             List<String> notes = new ArrayList<>();
 
             if (body.contains("public class")) {
-                bonusScore += 6;
-                notes.add("Java runner detected a class declaration.");
+                benchmarkBonus += 6;
+                notes.add("Java benchmark detected a class declaration.");
             }
             if (body.contains("static")) {
-                bonusScore += 4;
-                notes.add("Java runner detected a static entrypoint or helper.");
+                benchmarkBonus += 4;
+                notes.add("Java benchmark detected a static method.");
             }
             if (body.contains("list<")) {
-                bonusScore += 5;
-                notes.add("Java runner detected a typed collection.");
+                benchmarkBonus += 5;
+                notes.add("Java benchmark detected a typed collection.");
             }
             if (body.contains("for")) {
-                bonusScore += 4;
-                notes.add("Java runner detected iterative control flow.");
+                benchmarkBonus += 4;
+                notes.add("Java benchmark detected iterative control flow.");
             }
             if (body.contains("if")) {
-                bonusScore += 4;
-                notes.add("Java runner detected branching logic.");
+                benchmarkBonus += 4;
+                notes.add("Java benchmark detected branching logic.");
             }
             if (body.contains("return")) {
-                bonusScore += 2;
-                notes.add("Java runner detected an explicit return path.");
+                benchmarkBonus += 2;
+                notes.add("Java benchmark detected an explicit return path.");
             }
 
             String notesJson = notes.stream()
@@ -57,13 +57,13 @@ public class JavaRunnerServer {
             writeJson(
                 exchange,
                 200,
-                "{\"bonusScore\":" + bonusScore + ",\"notes\":[" + notesJson + "]}"
+                "{\"benchmarkBonus\":" + benchmarkBonus + ",\"notes\":[" + notesJson + "]}"
             );
         });
 
         server.setExecutor(Executors.newFixedThreadPool(4));
         server.start();
-        System.out.println("java-runner listening on port 8080");
+        System.out.println("java-benchmark listening on port 8080");
     }
 
     private static void writeJson(HttpExchange exchange, int statusCode, String body) throws IOException {
@@ -82,4 +82,3 @@ public class JavaRunnerServer {
         return raw.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 }
-

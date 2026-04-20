@@ -200,7 +200,7 @@ select {
   padding: 12px 14px;
 }
 
-.challenge-summary {
+.workload-summary {
   margin: 16px 0;
   padding: 16px;
   border-radius: 18px;
@@ -208,7 +208,7 @@ select {
   border: 1px solid rgba(125, 211, 252, 0.12);
 }
 
-.challenge-summary h3 {
+.workload-summary h3 {
   margin: 8px 0;
 }
 

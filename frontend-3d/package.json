@@ -1,5 +1,5 @@
 {
-  "name": "ai-coding-trainer-3d-frontend",
+  "name": "polyglot-observatory-3d-frontend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -22,4 +22,3 @@
     "vite": "^5.4.10"
   }
 }
-

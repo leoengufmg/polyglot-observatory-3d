@@ -1,0 +1,21 @@
+{
+  "id": "divisibility-map",
+  "title": "Divisibility Map",
+  "difficulty": "Intro",
+  "description": "Generate a labeled sequence that maps divisibility rules into readable tags.",
+  "prompt": "Build a function that produces a sequence from 1 to n. Multiples of 3 become Fizz, multiples of 5 become Buzz, and multiples of both become FizzBuzz.",
+  "sampleCode": {
+    "python": "def divisibility_map(n: int) -> list[str]:\n    result = []\n    for value in range(1, n + 1):\n        if value % 15 == 0:\n            result.append('FizzBuzz')\n        elif value % 3 == 0:\n            result.append('Fizz')\n        elif value % 5 == 0:\n            result.append('Buzz')\n        else:\n            result.append(str(value))\n    return result\n",
+    "javascript": "function divisibilityMap(n) {\n  const result = [];\n  for (let value = 1; value <= n; value += 1) {\n    if (value % 15 === 0) {\n      result.push('FizzBuzz');\n    } else if (value % 3 === 0) {\n      result.push('Fizz');\n    } else if (value % 5 === 0) {\n      result.push('Buzz');\n    } else {\n      result.push(String(value));\n    }\n  }\n  return result;\n}\n",
+    "typescript": "export function divisibilityMap(n: number): string[] {\n  const result: string[] = [];\n  for (let value = 1; value <= n; value += 1) {\n    if (value % 15 === 0) {\n      result.push('FizzBuzz');\n    } else if (value % 3 === 0) {\n      result.push('Fizz');\n    } else if (value % 5 === 0) {\n      result.push('Buzz');\n    } else {\n      result.push(String(value));\n    }\n  }\n  return result;\n}\n",
+    "java": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class DivisibilityMap {\n    public static List<String> divisibilityMap(int n) {\n        List<String> result = new ArrayList<>();\n        for (int value = 1; value <= n; value++) {\n            if (value % 15 == 0) {\n                result.add(\"FizzBuzz\");\n            } else if (value % 3 == 0) {\n                result.add(\"Fizz\");\n            } else if (value % 5 == 0) {\n                result.add(\"Buzz\");\n            } else {\n                result.add(String.valueOf(value));\n            }\n        }\n        return result;\n    }\n}\n",
+    "ruby": "def divisibility_map(n)\n  result = []\n  (1..n).each do |value|\n    if value % 15 == 0\n      result << 'FizzBuzz'\n    elsif value % 3 == 0\n      result << 'Fizz'\n    elsif value % 5 == 0\n      result << 'Buzz'\n    else\n      result << value.to_s\n    end\n  end\n  result\nend\n"
+  },
+  "expectedSignals": {
+    "python": ["def divisibility_map", "for", "if", "append"],
+    "javascript": ["function divisibilityMap", "for", "if", "push"],
+    "typescript": ["function divisibilityMap", "for", "if", "string[]"],
+    "java": ["class DivisibilityMap", "for", "if", "List<String>"],
+    "ruby": ["def divisibility_map", "each", "if", "result <<"]
+  }
+}

@@ -3,13 +3,13 @@ export type Language = "python" | "javascript" | "typescript" | "java" | "ruby";
 export type TestStatus = "pass" | "warn" | "fail";
 export type StageStatus = "idle" | "running" | "success" | "error";
 
-export interface Challenge {
+export interface Workload {
   id: string;
   title: string;
   difficulty: string;
   description: string;
   prompt: string;
-  starterCode: Record<Language, string>;
+  sampleCode: Record<Language, string>;
 }
 
 export interface TestResult {
@@ -24,7 +24,7 @@ export interface PipelineStage {
   status: StageStatus;
 }
 
-export interface EvaluationResult {
+export interface AnalysisResult {
   score: number;
   summary: string;
   tests: TestResult[];
@@ -32,4 +32,3 @@ export interface EvaluationResult {
   reportMarkdown: string;
   serviceNotes: string[];
 }
-

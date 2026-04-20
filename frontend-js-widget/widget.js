@@ -1,7 +1,7 @@
 const widgetRoot = document.getElementById("widget-root");
 
 const starters = {
-  javascript: `function fizzbuzz(n) {
+  javascript: `function divisibilityMap(n) {
   const result = [];
   for (let value = 1; value <= n; value += 1) {
     if (value % 15 === 0) {
@@ -16,7 +16,7 @@ const starters = {
   }
   return result;
 }`,
-  typescript: `export function fizzbuzz(n: number): string[] {
+  typescript: `export function divisibilityMap(n: number): string[] {
   const result: string[] = [];
   for (let value = 1; value <= n; value += 1) {
     if (value % 15 === 0) {
@@ -43,14 +43,14 @@ widgetRoot.innerHTML = `
       </select>
     </label>
     <label>
-      Solution
+      Implementation
       <textarea id="code-input" spellcheck="false">${starters.javascript}</textarea>
     </label>
-    <button id="score-button" type="button">Simulate widget score</button>
+    <button id="score-button" type="button">Simulate quick scan</button>
     <article class="widget-score">
-      <span class="widget-score-label">Widget score</span>
+      <span class="widget-score-label">Scan score</span>
       <strong id="widget-score-value">--</strong>
-      <p id="widget-score-detail">Choose a language and run a lightweight frontend-only check.</p>
+      <p id="widget-score-detail">Choose a language and run a lightweight frontend-only scan.</p>
     </article>
   </section>
 `;
@@ -73,6 +73,5 @@ scoreButton.addEventListener("click", () => {
   const checks = ["function", "for", "if", "return"].filter((token) => code.includes(token));
   const score = 40 + checks.length * 15;
   scoreValue.textContent = `${Math.min(score, 100)}/100`;
-  scoreDetail.textContent = `Detected ${checks.length} core signals: ${checks.join(", ") || "none"}.`;
+  scoreDetail.textContent = `Detected ${checks.length} implementation signals: ${checks.join(", ") || "none"}.`;
 });
-

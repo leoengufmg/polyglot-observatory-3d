@@ -1,15 +1,17 @@
+name: polyglot-observatory-3d
+
 services:
   frontend-3d:
     build:
       context: .
       dockerfile: frontend-3d/Dockerfile
     environment:
-      VITE_EVALUATOR_API: http://python-evaluator:8000
+      VITE_ANALYZER_API: http://python-analyzer:8000
     ports:
       - "5173:5173"
     depends_on:
-      - python-evaluator
-      - java-runner
+      - python-analyzer
+      - java-benchmark
       - ruby-reporter
 
   frontend-js-widget:
@@ -19,23 +21,23 @@ services:
     ports:
       - "4173:80"
 
-  python-evaluator:
+  python-analyzer:
     build:
       context: .
-      dockerfile: services/python-evaluator/Dockerfile
+      dockerfile: services/python-analyzer/Dockerfile
     environment:
-      JAVA_RUNNER_URL: http://java-runner:8080
+      JAVA_BENCHMARK_URL: http://java-benchmark:8080
       RUBY_REPORTER_URL: http://ruby-reporter:4567
     ports:
       - "8000:8000"
     depends_on:
-      - java-runner
+      - java-benchmark
       - ruby-reporter
 
-  java-runner:
+  java-benchmark:
     build:
       context: .
-      dockerfile: services/java-runner/Dockerfile
+      dockerfile: services/java-benchmark/Dockerfile
     ports:
       - "8080:8080"
 
@@ -45,4 +47,3 @@ services:
       dockerfile: services/ruby-reporter/Dockerfile
     ports:
       - "4567:4567"
-

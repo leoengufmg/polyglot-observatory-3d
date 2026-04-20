@@ -1,6 +1,6 @@
 import { FormEvent, Suspense, lazy, useEffect, useState } from "react";
-import { evaluateSubmission, fetchChallenges } from "./lib/api";
-import { Challenge, EvaluationResult, Language, PipelineStage } from "./types";
+import { analyzeImplementation, fetchWorkloads } from "./lib/api";
+import { AnalysisResult, Language, PipelineStage, Workload } from "./types";
 
 const PipelineCanvas = lazy(() =>
   import("./components/PipelineCanvas").then((module) => ({ default: module.PipelineCanvas }))
@@ -9,62 +9,62 @@ const PipelineCanvas = lazy(() =>
 const languages: Language[] = ["python", "javascript", "typescript", "java", "ruby"];
 
 const idlePipeline: PipelineStage[] = [
-  { id: "submission", label: "Submission", status: "idle" },
-  { id: "tests", label: "Tests", status: "idle" },
-  { id: "score", label: "Score", status: "idle" },
-  { id: "feedback", label: "Feedback", status: "idle" }
+  { id: "ingest", label: "Ingest", status: "idle" },
+  { id: "checks", label: "Checks", status: "idle" },
+  { id: "benchmark", label: "Benchmark", status: "idle" },
+  { id: "report", label: "Report", status: "idle" }
 ];
 
 function App() {
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [selectedChallengeId, setSelectedChallengeId] = useState("");
+  const [workloads, setWorkloads] = useState<Workload[]>([]);
+  const [selectedWorkloadId, setSelectedWorkloadId] = useState("");
   const [language, setLanguage] = useState<Language>("typescript");
   const [code, setCode] = useState("");
-  const [result, setResult] = useState<EvaluationResult | null>(null);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
   const [pipeline, setPipeline] = useState<PipelineStage[]>(idlePipeline);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    async function loadChallenges() {
-      const nextChallenges = await fetchChallenges();
-      setChallenges(nextChallenges);
-      setSelectedChallengeId(nextChallenges[0]?.id ?? "");
+    async function loadWorkloads() {
+      const nextWorkloads = await fetchWorkloads();
+      setWorkloads(nextWorkloads);
+      setSelectedWorkloadId(nextWorkloads[0]?.id ?? "");
       setLoading(false);
     }
 
-    void loadChallenges();
+    void loadWorkloads();
   }, []);
 
-  const selectedChallenge = challenges.find((challenge) => challenge.id === selectedChallengeId);
+  const selectedWorkload = workloads.find((workload) => workload.id === selectedWorkloadId);
 
   useEffect(() => {
-    if (!selectedChallenge) {
+    if (!selectedWorkload) {
       return;
     }
 
-    setCode(selectedChallenge.starterCode[language]);
+    setCode(selectedWorkload.sampleCode[language]);
     setResult(null);
     setPipeline(idlePipeline);
-  }, [selectedChallengeId, language, selectedChallenge]);
+  }, [selectedWorkloadId, language, selectedWorkload]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!selectedChallenge) {
+    if (!selectedWorkload) {
       return;
     }
 
     setSubmitting(true);
     setPipeline([
-      { id: "submission", label: "Submission", status: "success" },
-      { id: "tests", label: "Tests", status: "running" },
-      { id: "score", label: "Score", status: "idle" },
-      { id: "feedback", label: "Feedback", status: "idle" }
+      { id: "ingest", label: "Ingest", status: "success" },
+      { id: "checks", label: "Checks", status: "running" },
+      { id: "benchmark", label: "Benchmark", status: "idle" },
+      { id: "report", label: "Report", status: "idle" }
     ]);
 
-    const evaluation = await evaluateSubmission(selectedChallenge.id, selectedChallenge.title, language, code);
-    setResult(evaluation);
-    setPipeline(evaluation.pipeline);
+    const analysis = await analyzeImplementation(selectedWorkload.id, selectedWorkload.title, language, code);
+    setResult(analysis);
+    setPipeline(analysis.pipeline);
     setSubmitting(false);
   }
 
@@ -72,10 +72,10 @@ function App() {
     <div className="shell">
       <header className="hero">
         <div>
-          <p className="eyebrow">Polyglot AI Training Portfolio</p>
-          <h1>AI Coding Trainer 3D</h1>
+          <p className="eyebrow">Polyglot Engineering Portfolio</p>
+          <h1>Polyglot Observatory 3D</h1>
           <p className="hero-copy">
-            Evaluate multi-language challenge solutions and watch the pipeline move through tests, scoring, and feedback in a custom Three.js scene.
+            Compare small multi-language implementations and inspect checks, benchmark signals, and generated reports in a custom Three.js scene.
           </p>
         </div>
         <div className="hero-stat">
@@ -88,12 +88,10 @@ function App() {
         <section className="panel panel-canvas">
           <div className="panel-header">
             <div>
-              <p className="panel-kicker">3D Evaluation Graph</p>
+              <p className="panel-kicker">3D Observatory Graph</p>
               <h2>Pipeline telemetry</h2>
             </div>
-            <span className={`score-chip ${result ? "score-chip-live" : ""}`}>
-              {result ? `${result.score}/100` : "waiting"}
-            </span>
+            <span className={`score-chip ${result ? "score-chip-live" : ""}`}>{result ? `${result.score}/100` : "waiting"}</span>
           </div>
           <Suspense fallback={<div className="pipeline-canvas pipeline-canvas-loading">Loading 3D scene...</div>}>
             <PipelineCanvas stages={pipeline} />
@@ -111,22 +109,22 @@ function App() {
         <section className="panel panel-workbench">
           <div className="panel-header">
             <div>
-              <p className="panel-kicker">Challenge Workbench</p>
-              <h2>Write and score a solution</h2>
+              <p className="panel-kicker">Implementation Workbench</p>
+              <h2>Inspect and analyze a workload</h2>
             </div>
           </div>
 
           {loading ? (
-            <p>Loading challenge library...</p>
-          ) : selectedChallenge ? (
+            <p>Loading workload catalog...</p>
+          ) : selectedWorkload ? (
             <form className="workbench-form" onSubmit={handleSubmit}>
               <div className="control-row">
                 <label>
-                  Challenge
-                  <select value={selectedChallengeId} onChange={(event) => setSelectedChallengeId(event.target.value)}>
-                    {challenges.map((challenge) => (
-                      <option key={challenge.id} value={challenge.id}>
-                        {challenge.title}
+                  Workload
+                  <select value={selectedWorkloadId} onChange={(event) => setSelectedWorkloadId(event.target.value)}>
+                    {workloads.map((workload) => (
+                      <option key={workload.id} value={workload.id}>
+                        {workload.title}
                       </option>
                     ))}
                   </select>
@@ -143,32 +141,32 @@ function App() {
                 </label>
               </div>
 
-              <article className="challenge-summary">
+              <article className="workload-summary">
                 <div>
-                  <span className="pill">{selectedChallenge.difficulty}</span>
-                  <h3>{selectedChallenge.title}</h3>
+                  <span className="pill">{selectedWorkload.difficulty}</span>
+                  <h3>{selectedWorkload.title}</h3>
                 </div>
-                <p>{selectedChallenge.prompt}</p>
+                <p>{selectedWorkload.prompt}</p>
               </article>
 
               <label className="editor-label">
-                Submission
+                Implementation
                 <textarea value={code} onChange={(event) => setCode(event.target.value)} spellCheck={false} />
               </label>
 
               <button className="primary-button" disabled={submitting} type="submit">
-                {submitting ? "Evaluating..." : "Run evaluation"}
+                {submitting ? "Analyzing..." : "Run analysis"}
               </button>
             </form>
           ) : (
-            <p>No challenges available.</p>
+            <p>No workloads available.</p>
           )}
         </section>
 
         <section className="panel panel-results">
           <div className="panel-header">
             <div>
-              <p className="panel-kicker">Evaluator Output</p>
+              <p className="panel-kicker">Analyzer Output</p>
               <h2>Results and report</h2>
             </div>
           </div>
@@ -204,7 +202,7 @@ function App() {
               </article>
             </div>
           ) : (
-            <p className="empty-state">Run a submission to populate the scoring pipeline and generate a final report.</p>
+            <p className="empty-state">Run an analysis to populate the pipeline and generate a final report.</p>
           )}
         </section>
       </main>
