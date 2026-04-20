@@ -1,0 +1,48 @@
+services:
+  frontend-3d:
+    build:
+      context: .
+      dockerfile: frontend-3d/Dockerfile
+    environment:
+      VITE_EVALUATOR_API: http://python-evaluator:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - python-evaluator
+      - java-runner
+      - ruby-reporter
+
+  frontend-js-widget:
+    build:
+      context: .
+      dockerfile: frontend-js-widget/Dockerfile
+    ports:
+      - "4173:80"
+
+  python-evaluator:
+    build:
+      context: .
+      dockerfile: services/python-evaluator/Dockerfile
+    environment:
+      JAVA_RUNNER_URL: http://java-runner:8080
+      RUBY_REPORTER_URL: http://ruby-reporter:4567
+    ports:
+      - "8000:8000"
+    depends_on:
+      - java-runner
+      - ruby-reporter
+
+  java-runner:
+    build:
+      context: .
+      dockerfile: services/java-runner/Dockerfile
+    ports:
+      - "8080:8080"
+
+  ruby-reporter:
+    build:
+      context: .
+      dockerfile: services/ruby-reporter/Dockerfile
+    ports:
+      - "4567:4567"
+

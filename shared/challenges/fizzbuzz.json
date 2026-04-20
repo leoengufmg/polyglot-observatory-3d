@@ -1,0 +1,22 @@
+{
+  "id": "fizzbuzz",
+  "title": "FizzBuzz Feedback Loop",
+  "difficulty": "Easy",
+  "description": "Return the FizzBuzz sequence from 1 to n as a list-like collection of strings.",
+  "prompt": "Write a function that returns the sequence from 1 to n. Multiples of 3 become Fizz, multiples of 5 become Buzz, and multiples of both become FizzBuzz.",
+  "starterCode": {
+    "python": "def fizzbuzz(n: int) -> list[str]:\n    result = []\n    for value in range(1, n + 1):\n        result.append(str(value))\n    return result\n",
+    "javascript": "function fizzbuzz(n) {\n  const result = [];\n  for (let value = 1; value <= n; value += 1) {\n    result.push(String(value));\n  }\n  return result;\n}\n",
+    "typescript": "export function fizzbuzz(n: number): string[] {\n  const result: string[] = [];\n  for (let value = 1; value <= n; value += 1) {\n    result.push(String(value));\n  }\n  return result;\n}\n",
+    "java": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class FizzBuzz {\n    public static List<String> fizzbuzz(int n) {\n        List<String> result = new ArrayList<>();\n        for (int value = 1; value <= n; value++) {\n            result.add(String.valueOf(value));\n        }\n        return result;\n    }\n}\n",
+    "ruby": "def fizzbuzz(n)\n  result = []\n  (1..n).each do |value|\n    result << value.to_s\n  end\n  result\nend\n"
+  },
+  "requiredTokens": {
+    "python": ["def fizzbuzz", "for", "if", "append"],
+    "javascript": ["function fizzbuzz", "for", "if", "push"],
+    "typescript": ["function fizzbuzz", "for", "if", "string[]"],
+    "java": ["class FizzBuzz", "for", "if", "List<String>"],
+    "ruby": ["def fizzbuzz", "each", "if", "result <<"]
+  }
+}
+
